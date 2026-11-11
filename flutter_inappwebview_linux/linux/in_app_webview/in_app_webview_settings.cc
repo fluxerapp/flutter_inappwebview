@@ -402,8 +402,14 @@ void InAppWebViewSettings::applyWpePlatformSettings(void* display_ptr) const {
 
   // Apply disable animations setting
   if (disableAnimations.has_value()) {
+#ifdef WPE_SETTING_REDUCED_MOTION
+    // WPE WebKit 2.54 renamed WPE_SETTING_DISABLE_ANIMATIONS.
+    wpe_settings_set_boolean(wpe_settings, WPE_SETTING_REDUCED_MOTION,
+                             disableAnimations.value(), WPE_SETTINGS_SOURCE_APPLICATION, &error);
+#else
     wpe_settings_set_boolean(wpe_settings, WPE_SETTING_DISABLE_ANIMATIONS,
                              disableAnimations.value(), WPE_SETTINGS_SOURCE_APPLICATION, &error);
+#endif
     g_clear_error(&error);
   }
 
