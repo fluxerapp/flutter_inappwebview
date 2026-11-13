@@ -3644,6 +3644,16 @@ bool InAppWebView::GetDmaBufFd(int* fd, uint32_t* stride, uint32_t* width, uint3
 #endif
 }
 
+#ifdef HAVE_WPE_PLATFORM
+WPEBuffer* InAppWebView::RefCurrentDmaBuf() const {
+  std::lock_guard<std::mutex> lock(wpe_buffer_mutex_);
+  if (current_buffer_ == nullptr || !WPE_IS_BUFFER_DMA_BUF(current_buffer_)) {
+    return nullptr;
+  }
+  return WPE_BUFFER(g_object_ref(current_buffer_));
+}
+#endif
+
 void* InAppWebView::GetCurrentEglImage(uint32_t* out_width, uint32_t* out_height) const {
 #ifdef HAVE_WPE_PLATFORM
   // WPEPlatform: Return the EGL image from our buffer-rendered callback

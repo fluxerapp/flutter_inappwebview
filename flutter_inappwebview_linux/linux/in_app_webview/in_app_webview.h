@@ -305,6 +305,10 @@ class InAppWebView {
   // The EGL image is owned by WPE and remains valid until the next frame.
   void* GetCurrentEglImage(uint32_t* out_width, uint32_t* out_height) const;
 
+#ifdef HAVE_WPE_PLATFORM
+  WPEBuffer* RefCurrentDmaBuf() const;
+#endif
+
   // Skip pixel readback - when using zero-copy EGL texture mode, we don't need
   // to read pixels back to CPU. This improves performance and avoids GL context issues.
   void SetSkipPixelReadback(bool skip) { skip_pixel_readback_ = skip; }

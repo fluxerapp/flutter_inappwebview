@@ -59,6 +59,9 @@ void inappwebview_egl_texture_set_egl_image(InAppWebViewEGLTexture* self,
                                             uint32_t width,
                                             uint32_t height);
 
+/** Takes ownership of the caller's reference to @buffer, a WPEBufferDMABuf. */
+void inappwebview_egl_texture_take_dma_buf(InAppWebViewEGLTexture* self, GObject* buffer);
+
 G_END_DECLS
 
 #endif  // FLUTTER_INAPPWEBVIEW_PLUGIN_INAPPWEBVIEW_EGL_TEXTURE_H_

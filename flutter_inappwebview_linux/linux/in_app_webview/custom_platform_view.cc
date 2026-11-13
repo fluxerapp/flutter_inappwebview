@@ -141,12 +141,19 @@ CustomPlatformView::CustomPlatformView(FlBinaryMessenger* messenger,
   webview_->SetOnFrameAvailable([this]() {
     // If using EGL texture, update the EGL image reference before marking available
     if (egl_texture_ != nullptr && webview_ != nullptr) {
+#ifdef HAVE_WPE_PLATFORM
+      WPEBuffer* buffer = webview_->RefCurrentDmaBuf();
+      if (buffer != nullptr) {
+        inappwebview_egl_texture_take_dma_buf(egl_texture_, G_OBJECT(buffer));
+      }
+#else
       uint32_t width = 0;
       uint32_t height = 0;
       void* egl_image = webview_->GetCurrentEglImage(&width, &height);
       if (egl_image != nullptr) {
         inappwebview_egl_texture_set_egl_image(egl_texture_, egl_image, width, height);
       }
+#endif
     }
     MarkTextureFrameAvailable();
   });
